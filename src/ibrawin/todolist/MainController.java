@@ -1,4 +1,33 @@
 package ibrawin.todolist;
 
+import ibrawin.todolist.datamodel.TodoItem;
+
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainController {
+
+    private List<TodoItem> todoItems;
+
+    public void initialize() {
+        TodoItem item1 = new TodoItem("Mail birthday Card", "Buy a 35th birthday card for Lola",
+                LocalDate.of(2021, Month.FEBRUARY, 5));
+        TodoItem item2 = new TodoItem("See physio", "For posture and leg shape",
+                LocalDate.of(2021, Month.AUGUST, 17));
+        TodoItem item3 = new TodoItem("Finish project", "Complete potential payout project by the end of the quarter",
+                LocalDate.of(2021, Month.MARCH, 23));
+        TodoItem item4 = new TodoItem("Expected freedom", "Travel, Have fun or do anything when corona cases have cleared up",
+                LocalDate.of(2021, Month.DECEMBER, 31));
+        TodoItem item5 = new TodoItem("Mail birthday Card", "Buy a 30th birthday card for John",
+                LocalDate.of(2021, Month.FEBRUARY, 12));
+
+        todoItems = new ArrayList<>();
+        todoItems.add(item1);
+        todoItems.add(item2);
+        todoItems.add(item3);
+        todoItems.add(item4);
+        todoItems.add(item5);
+    }
 }
