@@ -4,6 +4,7 @@ import ibrawin.todolist.datamodel.TodoItem;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextArea;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -16,6 +17,9 @@ public class MainController {
 
     @FXML
     private ListView<TodoItem> todoItemListView;
+
+    @FXML
+    private TextArea todoItemDetails;
 
     public void initialize() {
         TodoItem item1 = new TodoItem("Mail birthday Card", "Buy a 35th birthday card for Lola",
@@ -38,5 +42,12 @@ public class MainController {
 
         todoItemListView.getItems().setAll(todoItems);
         todoItemListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+    }
+
+    public void handleClickListView() {
+        TodoItem item = todoItemListView.getSelectionModel().getSelectedItem();
+
+        String data = item.getDetails() + "\n" + item.getDeadline();
+        todoItemDetails.setText(data);
     }
 }
