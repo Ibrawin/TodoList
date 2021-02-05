@@ -30,8 +30,8 @@ public class MainController {
                 LocalDate.of(2021, Month.MARCH, 23));
         TodoItem item4 = new TodoItem("Expected freedom", "Travel, Have fun or do anything when corona cases have cleared up",
                 LocalDate.of(2021, Month.DECEMBER, 31));
-        TodoItem item5 = new TodoItem("Mail birthday Card", "Buy a 30th birthday card for John",
-                LocalDate.of(2021, Month.FEBRUARY, 12));
+        TodoItem item5 = new TodoItem("Meet Iz", "As soon as lockdown ends",
+                LocalDate.of(2021, Month.MARCH, 15));
 
         todoItems = new ArrayList<>();
         todoItems.add(item1);
