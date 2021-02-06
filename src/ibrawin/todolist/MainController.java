@@ -2,6 +2,7 @@ package ibrawin.todolist;
 
 import ibrawin.todolist.datamodel.TodoItem;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
@@ -20,6 +21,9 @@ public class MainController {
 
     @FXML
     private TextArea todoItemDetails;
+
+    @FXML
+    private Label todoItemDeadline;
 
     public void initialize() {
         TodoItem item1 = new TodoItem("Mail birthday Card", "Buy a 35th birthday card for Lola",
@@ -46,8 +50,7 @@ public class MainController {
 
     public void handleClickListView() {
         TodoItem item = todoItemListView.getSelectionModel().getSelectedItem();
-
-        String data = item.getDetails() + "\n" + item.getDeadline();
-        todoItemDetails.setText(data);
+        todoItemDetails.setText(item.getDetails());
+        todoItemDeadline.setText(item.getDeadline().toString());
     }
 }

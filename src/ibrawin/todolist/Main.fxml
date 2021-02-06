@@ -7,6 +7,9 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 <BorderPane fx:controller="ibrawin.todolist.MainController"
             xmlns:fx="http://javafx.com/fxml">
     <left>
@@ -15,6 +18,20 @@
         </ListView>
     </left>
     <center>
-        <TextArea fx:id="todoItemDetails"/>
+        <VBox style="-fx-background-color: white">
+            <TextArea fx:id="todoItemDetails" VBox.vgrow="ALWAYS"/>
+            <HBox>
+                <Label text="Due: ">
+                    <font>
+                        <Font name="Times New Roman bold" size="20"/>
+                    </font>
+                </Label>
+                <Label fx:id="todoItemDeadline">
+                    <font>
+                        <Font name="Times New Roman bold" size="20"/>
+                    </font>
+                </Label>
+            </HBox>
+        </VBox>
     </center>
 </BorderPane>
