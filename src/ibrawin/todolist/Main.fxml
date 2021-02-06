@@ -13,7 +13,7 @@
 <BorderPane fx:controller="ibrawin.todolist.MainController"
             xmlns:fx="http://javafx.com/fxml">
     <left>
-        <ListView fx:id="todoItemListView" onMouseClicked="#handleClickListView">
+        <ListView fx:id="todoItemListView">
 
         </ListView>
     </left>

@@ -1,6 +1,8 @@
 package ibrawin.todolist;
 
 import ibrawin.todolist.datamodel.TodoItem;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -44,13 +46,19 @@ public class MainController {
         todoItems.add(item4);
         todoItems.add(item5);
 
+        todoItemListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TodoItem>() {
+            @Override
+            public void changed(ObservableValue<? extends TodoItem> observableValue, TodoItem todoItem, TodoItem t1) {
+                if(t1 != null) {
+                    TodoItem item = todoItemListView.getSelectionModel().getSelectedItem();
+                    todoItemDetails.setText(item.getDetails());
+                    todoItemDeadline.setText(item.getDeadline().toString());
+                }
+            }
+        });
+
         todoItemListView.getItems().setAll(todoItems);
         todoItemListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-    }
-
-    public void handleClickListView() {
-        TodoItem item = todoItemListView.getSelectionModel().getSelectedItem();
-        todoItemDetails.setText(item.getDetails());
-        todoItemDeadline.setText(item.getDeadline().toString());
+        todoItemListView.getSelectionModel().selectFirst();
     }
 }
