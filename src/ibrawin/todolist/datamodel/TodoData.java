@@ -26,6 +26,10 @@ public enum TodoData {
         return todoItems;
     }
 
+    public void addTodoItem(TodoItem todoItem) {
+        todoItems.add(todoItem);
+    }
+
     public void loadTodoItems() throws IOException {
         todoItems = FXCollections.observableArrayList();
         Path path = Paths.get(fileName);

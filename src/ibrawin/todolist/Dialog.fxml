@@ -9,16 +9,16 @@
 <DialogPane fx:controller="ibrawin.todolist.DialogController"
             xmlns:fx="http://javafx.com/fxml">
     <headerText>
-        Add a Todo Item!
+        Enter each field before submitting:
     </headerText>
     <content>
         <GridPane hgap="10" vgap="10">
             <Label text="Short description:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-            <TextField GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <TextField fx:id="shortDescriptionField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
             <Label text="Details:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-            <TextArea GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <TextArea fx:id="detailsField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
             <Label text="Deadline:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-            <DatePicker GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <DatePicker fx:id="deadlinePicker" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
         </GridPane>
     </content>
 </DialogPane>
