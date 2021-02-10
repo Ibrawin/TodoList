@@ -1,6 +1,7 @@
 package ibrawin.todolist.datamodel;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,19 +11,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 public enum TodoData {
     INSTANCE;
     private static String fileName = "TodoListItems.txt";
-    private List<TodoItem> todoItems;
+    private ObservableList<TodoItem> todoItems;
     private DateTimeFormatter formatter;
 
     TodoData() {
         formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     }
 
-    public List<TodoItem> getTodoItems() {
+    public ObservableList<TodoItem> getTodoItems() {
         return todoItems;
     }
 

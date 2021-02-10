@@ -45,7 +45,7 @@ public class MainController {
             }
         });
 
-        todoItemListView.getItems().setAll(TodoData.INSTANCE.getTodoItems());
+        todoItemListView.setItems(TodoData.INSTANCE.getTodoItems());
         todoItemListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         todoItemListView.getSelectionModel().selectFirst();
     }
@@ -71,11 +71,7 @@ public class MainController {
         if(result.isPresent() && result.get() == ButtonType.OK) {
             DialogController controller = fxmlLoader.getController();
             TodoItem newItem = controller.processResults();
-            todoItemListView.getItems().setAll(TodoData.INSTANCE.getTodoItems());
             todoItemListView.getSelectionModel().select(newItem);
-            System.out.println("OK pressed");
-        } else {
-            System.out.println("Cancel pressed");
         }
     }
 }
