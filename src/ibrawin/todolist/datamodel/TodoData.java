@@ -68,4 +68,12 @@ public enum TodoData {
             }
         }
     }
+
+    public void editTodoItem(TodoItem todoItem) {
+        todoItems.set(todoItems.indexOf(todoItem), todoItem);
+    }
+
+    public void deleteTodoItem(TodoItem todoItem) {
+        todoItems.remove(todoItem);
+    }
 }

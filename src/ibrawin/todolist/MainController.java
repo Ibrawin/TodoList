@@ -2,13 +2,18 @@ package ibrawin.todolist;
 
 import ibrawin.todolist.datamodel.TodoData;
 import ibrawin.todolist.datamodel.TodoItem;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
@@ -34,7 +39,30 @@ public class MainController {
     @FXML
     private BorderPane mainView;
 
+    private ContextMenu contextMenu;
+
     public void initialize() {
+        contextMenu = new ContextMenu();
+        MenuItem deleteMenuItem = new MenuItem("Delete");
+        MenuItem editMenuItem = new MenuItem("Edit");
+        deleteMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                TodoItem selectedItem = todoItemListView.getSelectionModel().getSelectedItem();
+                deleteItem(selectedItem);
+            }
+        });
+        editMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                TodoItem selectedItem = todoItemListView.getSelectionModel().getSelectedItem();
+                editItem();
+            }
+        });
+
+        contextMenu.getItems().addAll(deleteMenuItem);
+        contextMenu.getItems().addAll(editMenuItem);
+
         todoItemListView.getSelectionModel().selectedItemProperty().addListener((observableValue, todoItem, t1) -> {
             if (t1 != null) {
                 TodoItem item = todoItemListView.getSelectionModel().getSelectedItem();
@@ -51,7 +79,7 @@ public class MainController {
             @Override
             public ListCell<TodoItem> call(ListView<TodoItem> todoItemListView) {
 
-                return new ListCell<>() {
+                ListCell<TodoItem> listCell = new ListCell<>() {
 
                     @Override
                     protected void updateItem(TodoItem todoItem, boolean empty) {
@@ -69,7 +97,18 @@ public class MainController {
                             }
                         }
                     }
+
                 };
+
+                listCell.emptyProperty().addListener(
+                        (obs, wasEmpty, isNowEmpty) -> {
+                            if(isNowEmpty) {
+                                listCell.setContextMenu(null);
+                            } else {
+                                listCell.setContextMenu(contextMenu);
+                            }
+                        });
+                return listCell;
             }
         });
     }
@@ -96,6 +135,44 @@ public class MainController {
             DialogController controller = fxmlLoader.getController();
             TodoItem newItem = controller.processResults();
             todoItemListView.getSelectionModel().select(newItem);
+        }
+    }
+
+    public void deleteItem(TodoItem todoItem) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Todo Item");
+        alert.setHeaderText("Delete item: " + todoItem.getShortDescription());
+        alert.setContentText("Are you sure you want to delete this Todo Item?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.isPresent() && result.get() == ButtonType.OK) {
+            TodoData.INSTANCE.deleteTodoItem(todoItem);
+        }
+    }
+
+    public void editItem() {
+        TodoItem selectedItem = todoItemListView.getSelectionModel().getSelectedItem();
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.initOwner(mainView.getScene().getWindow());
+        dialog.setTitle("Edit Todo Item");
+        dialog.setHeaderText("Edit existing Todo Item!");
+
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("Dialog.fxml"));
+
+        try {
+            dialog.getDialogPane().setContent(fxmlLoader.load());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+
+        Optional<ButtonType> result = dialog.showAndWait();
+        if(result.isPresent() && result.get() == ButtonType.OK) {
+            DialogController controller = fxmlLoader.getController();
+            TodoItem existingItem = controller.editResults(selectedItem);
+            todoItemListView.getSelectionModel().clearSelection();
+            todoItemListView.getSelectionModel().select(existingItem);
         }
     }
 }

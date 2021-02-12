@@ -30,4 +30,14 @@ public class DialogController {
 
         return newItem;
     }
+
+    public TodoItem editResults(TodoItem todoItem) {
+        todoItem.setShortDescription(shortDescriptionField.getText().trim());
+        todoItem.setDetails(detailsField.getText().trim());
+        todoItem.setDeadline(deadlinePicker.getValue());
+
+        TodoData.INSTANCE.editTodoItem(todoItem);
+
+        return todoItem;
+    }
 }
