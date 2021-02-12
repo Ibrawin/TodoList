@@ -2,19 +2,21 @@ package ibrawin.todolist;
 
 import ibrawin.todolist.datamodel.TodoData;
 import ibrawin.todolist.datamodel.TodoItem;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.util.Callback;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
@@ -33,21 +35,43 @@ public class MainController {
     private BorderPane mainView;
 
     public void initialize() {
-        todoItemListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TodoItem>() {
-            @Override
-            public void changed(ObservableValue<? extends TodoItem> observableValue, TodoItem todoItem, TodoItem t1) {
-                if(t1 != null) {
-                    TodoItem item = todoItemListView.getSelectionModel().getSelectedItem();
-                    todoItemDetails.setText(item.getDetails());
-                    DateTimeFormatter df = DateTimeFormatter.ofPattern("MMMM d, yyyy");
-                    todoItemDeadline.setText(df.format(item.getDeadline()));
-                }
+        todoItemListView.getSelectionModel().selectedItemProperty().addListener((observableValue, todoItem, t1) -> {
+            if (t1 != null) {
+                TodoItem item = todoItemListView.getSelectionModel().getSelectedItem();
+                todoItemDetails.setText(item.getDetails());
+                DateTimeFormatter df = DateTimeFormatter.ofPattern("MMMM d, yyyy");
+                todoItemDeadline.setText(df.format(item.getDeadline()));
             }
         });
 
         todoItemListView.setItems(TodoData.INSTANCE.getTodoItems());
         todoItemListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         todoItemListView.getSelectionModel().selectFirst();
+        todoItemListView.setCellFactory(new Callback<>() {
+            @Override
+            public ListCell<TodoItem> call(ListView<TodoItem> todoItemListView) {
+
+                return new ListCell<>() {
+
+                    @Override
+                    protected void updateItem(TodoItem todoItem, boolean empty) {
+                        super.updateItem(todoItem, empty);
+                        if (empty) {
+                            setText(null);
+                        } else {
+                            setText(todoItem.getShortDescription());
+                            if (todoItem.getDeadline().isBefore(LocalDate.now())) {
+                                setTextFill(Color.RED);
+                            } else if (todoItem.getDeadline().isBefore(LocalDate.now().plusDays(1L))) {
+                                setTextFill(Color.ORANGE);
+                            } else {
+                                setTextFill(Color.BLACK);
+                            }
+                        }
+                    }
+                };
+            }
+        });
     }
 
     public void showNewDialog() {

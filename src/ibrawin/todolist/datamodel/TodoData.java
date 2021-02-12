@@ -14,9 +14,9 @@ import java.time.format.DateTimeFormatter;
 
 public enum TodoData {
     INSTANCE;
-    private static String fileName = "TodoListItems.txt";
+    private static final String fileName = "TodoListItems.txt";
     private ObservableList<TodoItem> todoItems;
-    private DateTimeFormatter formatter;
+    private final DateTimeFormatter formatter;
 
     TodoData() {
         formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
