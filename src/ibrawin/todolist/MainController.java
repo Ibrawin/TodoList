@@ -2,6 +2,7 @@ package ibrawin.todolist;
 
 import ibrawin.todolist.datamodel.TodoData;
 import ibrawin.todolist.datamodel.TodoItem;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -25,6 +26,7 @@ import javafx.util.Callback;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.Optional;
 
 public class MainController {
@@ -74,9 +76,17 @@ public class MainController {
             }
         });
 
-        todoItemListView.setItems(TodoData.INSTANCE.getTodoItems());
+        SortedList<TodoItem> sortedList = new SortedList<>(TodoData.INSTANCE.getTodoItems(), new Comparator<TodoItem>() {
+            @Override
+            public int compare(TodoItem o1, TodoItem o2) {
+                return o1.getDeadline().compareTo(o2.getDeadline());
+            }
+        });
+
+        todoItemListView.setItems(sortedList);
         todoItemListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         todoItemListView.getSelectionModel().selectFirst();
+
         todoItemListView.setCellFactory(new Callback<>() {
             @Override
             public ListCell<TodoItem> call(ListView<TodoItem> todoItemListView) {
