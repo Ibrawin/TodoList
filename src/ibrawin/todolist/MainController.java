@@ -16,6 +16,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
@@ -138,6 +140,15 @@ public class MainController {
         }
     }
 
+    public void handleKeyPressed(KeyEvent keyEvent) {
+        TodoItem selectedItem = todoItemListView.getSelectionModel().getSelectedItem();
+        if(selectedItem != null) {
+            if(keyEvent.getCode().equals(KeyCode.DELETE)) {
+                deleteItem(selectedItem);
+            }
+        }
+    }
+
     public void deleteItem(TodoItem todoItem) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete Todo Item");
@@ -147,6 +158,12 @@ public class MainController {
         if(result.isPresent() && result.get() == ButtonType.OK) {
             TodoData.INSTANCE.deleteTodoItem(todoItem);
         }
+    }
+
+    public void deleteSelectedItem() {
+        TodoItem selectedItem = todoItemListView.getSelectionModel().getSelectedItem();
+
+        deleteItem(selectedItem);
     }
 
     public void editItem() {
