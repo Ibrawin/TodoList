@@ -5,8 +5,6 @@ import ibrawin.todolist.datamodel.TodoItem;
 import javafx.application.Platform;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
@@ -35,6 +33,11 @@ import java.util.function.Predicate;
 
 public class MainController {
 
+    private ContextMenu contextMenu;
+    private FilteredList<TodoItem> filteredList;
+    private Predicate<TodoItem> allItems;
+    private Predicate<TodoItem> existingItems;
+
     @FXML
     private ListView<TodoItem> todoItemListView;
 
@@ -47,34 +50,20 @@ public class MainController {
     @FXML
     private BorderPane mainView;
 
-    private ContextMenu contextMenu;
-
     @FXML
     private ToggleButton filterToggleButton;
-
-    private FilteredList<TodoItem> filteredList;
-
-    private Predicate<TodoItem> allItems;
-
-    private Predicate<TodoItem> existingItems;
 
     public void initialize() {
         contextMenu = new ContextMenu();
         MenuItem deleteMenuItem = new MenuItem("Delete");
         MenuItem editMenuItem = new MenuItem("Edit");
-        deleteMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                TodoItem selectedItem = todoItemListView.getSelectionModel().getSelectedItem();
-                deleteItem(selectedItem);
-            }
+        deleteMenuItem.setOnAction(actionEvent -> {
+            TodoItem selectedItem = todoItemListView.getSelectionModel().getSelectedItem();
+            deleteItem(selectedItem);
         });
-        editMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                TodoItem selectedItem = todoItemListView.getSelectionModel().getSelectedItem();
-                editItem();
-            }
+        editMenuItem.setOnAction(actionEvent -> {
+            todoItemListView.getSelectionModel().getSelectedItem();
+            editItem();
         });
 
         contextMenu.getItems().addAll(deleteMenuItem);
@@ -89,28 +78,13 @@ public class MainController {
             }
         });
 
-        allItems = new Predicate<TodoItem>() {
-            @Override
-            public boolean test(TodoItem todoItem) {
-                return true;
-            }
-        };
+        allItems = todoItem -> true;
 
-        existingItems = new Predicate<TodoItem>() {
-            @Override
-            public boolean test(TodoItem todoItem) {
-                return todoItem.getDeadline().isAfter(LocalDate.now().minusDays(1L));
-            }
-        };
+        existingItems = todoItem -> todoItem.getDeadline().isAfter(LocalDate.now().minusDays(1L));
 
         filteredList = new FilteredList<>(TodoData.INSTANCE.getTodoItems(), allItems);
 
-        SortedList<TodoItem> sortedList = new SortedList<>(filteredList, new Comparator<TodoItem>() {
-            @Override
-            public int compare(TodoItem o1, TodoItem o2) {
-                return o1.getDeadline().compareTo(o2.getDeadline());
-            }
-        });
+        SortedList<TodoItem> sortedList = new SortedList<>(filteredList, Comparator.comparing(TodoItem::getDeadline));
 
         todoItemListView.setItems(sortedList);
         todoItemListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
