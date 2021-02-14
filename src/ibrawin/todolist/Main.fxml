@@ -23,7 +23,7 @@
                 <Menu text="File">
                     <MenuItem text="New" onAction="#showNewDialog"/>
                     <SeparatorMenuItem/>
-                    <MenuItem text="Exit"/>
+                    <MenuItem text="Exit" onAction="#handleExit"/>
                 </Menu>
             </MenuBar>
             <ToolBar>

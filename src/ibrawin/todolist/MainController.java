@@ -2,6 +2,7 @@ package ibrawin.todolist;
 
 import ibrawin.todolist.datamodel.TodoData;
 import ibrawin.todolist.datamodel.TodoItem;
+import javafx.application.Platform;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
@@ -247,5 +248,9 @@ public class MainController {
             filteredList.setPredicate(allItems);
             todoItemListView.getSelectionModel().select(selectedItem);
         }
+    }
+
+    public void handleExit() {
+        Platform.exit();
     }
 }
