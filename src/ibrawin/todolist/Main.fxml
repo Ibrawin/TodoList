@@ -14,6 +14,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.control.ToggleButton?>
 <BorderPane fx:id="mainView" fx:controller="ibrawin.todolist.MainController"
             xmlns:fx="http://javafx.com/fxml">
     <top>
@@ -57,6 +58,11 @@
                             </ImageView>
                         </graphic>
                     </Button>
+                    <ToggleButton fx:id="filterToggleButton" text="Hide Expired Todo Items" onAction="#handleFilterButton">
+                        <tooltip>
+                            <Tooltip text="Button Down: Show items that hasn't expired. Button Up: Show all items" />
+                        </tooltip>
+                    </ToggleButton>
                 </HBox>
             </ToolBar>
         </VBox>

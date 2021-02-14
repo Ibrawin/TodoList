@@ -2,6 +2,7 @@ package ibrawin.todolist;
 
 import ibrawin.todolist.datamodel.TodoData;
 import ibrawin.todolist.datamodel.TodoItem;
+import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,6 +18,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -28,6 +30,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class MainController {
 
@@ -44,6 +47,15 @@ public class MainController {
     private BorderPane mainView;
 
     private ContextMenu contextMenu;
+
+    @FXML
+    private ToggleButton filterToggleButton;
+
+    private FilteredList<TodoItem> filteredList;
+
+    private Predicate<TodoItem> allItems;
+
+    private Predicate<TodoItem> existingItems;
 
     public void initialize() {
         contextMenu = new ContextMenu();
@@ -76,7 +88,23 @@ public class MainController {
             }
         });
 
-        SortedList<TodoItem> sortedList = new SortedList<>(TodoData.INSTANCE.getTodoItems(), new Comparator<TodoItem>() {
+        allItems = new Predicate<TodoItem>() {
+            @Override
+            public boolean test(TodoItem todoItem) {
+                return true;
+            }
+        };
+
+        existingItems = new Predicate<TodoItem>() {
+            @Override
+            public boolean test(TodoItem todoItem) {
+                return todoItem.getDeadline().isAfter(LocalDate.now().minusDays(1L));
+            }
+        };
+
+        filteredList = new FilteredList<>(TodoData.INSTANCE.getTodoItems(), allItems);
+
+        SortedList<TodoItem> sortedList = new SortedList<>(filteredList, new Comparator<TodoItem>() {
             @Override
             public int compare(TodoItem o1, TodoItem o2) {
                 return o1.getDeadline().compareTo(o2.getDeadline());
@@ -200,6 +228,24 @@ public class MainController {
             TodoItem existingItem = controller.editResults(selectedItem);
             todoItemListView.getSelectionModel().clearSelection();
             todoItemListView.getSelectionModel().select(existingItem);
+        }
+    }
+
+    public void handleFilterButton() {
+        TodoItem selectedItem = todoItemListView.getSelectionModel().getSelectedItem();
+        if(filterToggleButton.isSelected()) {
+            filteredList.setPredicate(existingItems);
+            if(filteredList.isEmpty()) {
+                todoItemDetails.clear();
+                todoItemDeadline.setText(null);
+            } else if(filteredList.contains(selectedItem)) {
+                todoItemListView.getSelectionModel().select(selectedItem);
+            } else {
+                todoItemListView.getSelectionModel().selectFirst();
+            }
+        } else {
+            filteredList.setPredicate(allItems);
+            todoItemListView.getSelectionModel().select(selectedItem);
         }
     }
 }
