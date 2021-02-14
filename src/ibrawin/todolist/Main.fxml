@@ -27,7 +27,7 @@
                 </Menu>
             </MenuBar>
             <ToolBar>
-                <HBox>
+                <HBox spacing="10">
                     <Button text="New" onAction="#showNewDialog">
                         <tooltip>
                             <Tooltip text="Add a new Todo Item"/>
@@ -58,7 +58,8 @@
                             </ImageView>
                         </graphic>
                     </Button>
-                    <ToggleButton fx:id="filterToggleButton" text="Hide Expired Todo Items" onAction="#handleFilterButton">
+                    <ToggleButton fx:id="filterToggleButton" text="Hide Expired Todo Items"
+                                  onAction="#handleFilterButton" prefHeight="32">
                         <tooltip>
                             <Tooltip text="Button Down: Show items that hasn't expired. Button Up: Show all items" />
                         </tooltip>
